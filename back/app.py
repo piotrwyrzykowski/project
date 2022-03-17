@@ -2,19 +2,14 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-database = []
+database = [{'sensor':'piotr','temp':'22'}]
 
 
 @app.route("/", methods=["POST", "GET"])
 def index():
     if request.method == "POST":
-        animal = request.form["sensor"]
-        name = request.form["temp"]
-
-        database.append({"sensor": name, "temp": animal})
-
-        return f"[BACKEND] Name: {name} Animal: {animal} added to the database"
-
+        database.append(request.get_json())
+        return "response"
     else:
         response = jsonify(database)
 

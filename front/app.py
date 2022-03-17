@@ -4,7 +4,7 @@ import sys
 
 app = Flask(__name__)
 
-backend_URL = "http://192.168.1.44:5001/"
+backend_URL = "http://backend:5001"
 log = []
 
 
