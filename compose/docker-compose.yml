@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+
+  frontend:
+    depends_on:
+      - backend
+    container_name: frontend
+    build:
+      context: ../front
+        
+    ports:
+    - "5000:5000"
+    networks:
+    - docker_network
+
+  backend:
+
+    container_name: backend
+    build:
+      context: ../back
+    ports:
+    - "5001:5001"
+    networks:
+    - docker_network
+
+
+
+networks:
+  docker_network:
+    driver: bridge
