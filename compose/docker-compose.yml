@@ -1,6 +1,28 @@
 version: '3'
-
 services:
+
+  backend:
+    depends_on:
+    - redis
+    - db
+    container_name: backend
+    build:
+      context: ../back
+    ports:
+    - "5001:5001"
+    networks:
+    - docker_network
+    environment:
+    - PYTHONUNBUFFERED=0
+
+  redis:
+    container_name: redis
+    image: "redislabs/rejson:latest"
+    volumes:
+        - ../data:/data
+    networks:
+    - docker_network
+
 
   frontend:
     depends_on:
@@ -14,17 +36,23 @@ services:
     networks:
     - docker_network
 
-  backend:
-
-    container_name: backend
-    build:
-      context: ../back
-    ports:
-    - "5001:5001"
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - ../data/postgres:/var/lib/postgresql
     networks:
     - docker_network
 
-
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+    - docker_network
 
 networks:
   docker_network:

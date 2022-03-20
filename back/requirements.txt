@@ -1,1 +1,3 @@
 flask
+rejson
+psycopg2-binary
