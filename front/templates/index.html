@@ -1,19 +1,27 @@
-<form method="POST" action="/">
-    <p>Name: <input type="text" name="name" ></p>
-    <p>Animal: <input type="text" name = "animal"></p>
-    <p><input type="submit" value="Add Animals" name="add_animal">
-       <input type="submit" value="Get Animals" name="get_animals"/></p>
-</form>
-
-<pre>Animals:
-    {% for x in animals %}
-    Name: {{x['name']}}
-    Animal: {{x['animal']}}
-    {% endfor %}
-</pre>
-<pre>Action log: 
-    {% for row in log %}
-    >>> {{ row }}
-    {% endfor %}
-</pre>
-
+<!DOCTYPE html>
+<html lang="en">
+    <style type="text/css">
+        h1 {
+            color: chocolate;
+            font-family: 'Lucida Sans';
+        }
+        p {
+            color: black;
+            font-family: 'Lucida Sans';
+            font-size: medium;
+            line-height: 2;
+            word-wrap: break-word;
+        }
+    </style>    
+<head>
+    <title>Stacja pogodowa</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>Stacja pogodowa!</h1>
+    <p>
+        Nazwa sensora: {{ data_bmp.name }}</br>
+        Temperatura: {{ data_bmp.temp }}</br>
+        Wilgotnsc: {{ data_bmp.hum }}</br>
+</body>
+</html

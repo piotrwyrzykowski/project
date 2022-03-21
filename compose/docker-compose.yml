@@ -19,7 +19,9 @@ services:
     container_name: redis
     image: "redislabs/rejson:latest"
     volumes:
-        - ../data:/data
+        - redis:/data
+    ports:
+      - "6379:6379"
     networks:
     - docker_network
 
@@ -42,7 +44,7 @@ services:
     environment:
       POSTGRES_PASSWORD: example
     volumes:
-      - ../data/postgres:/var/lib/postgresql
+      - postgresql:/var/lib/postgresql
     networks:
     - docker_network
 
@@ -57,3 +59,16 @@ services:
 networks:
   docker_network:
     driver: bridge
+volumes:
+  redis:
+    driver: local
+    driver_opts:
+      type: ''
+      o: 'bind'
+      device: '/home/panda/project/data/redis'
+  postgresql:
+    driver: local
+    driver_opts:
+      type: ''
+      o: 'bind'
+      device: '/home/panda/project/data/postgresql'

@@ -24,14 +24,25 @@ def index():
 
         return "response"
     else:
-        #response = rj.jsonget('obj',Path('.sensor'))
+        response = rj.jsonget('obj',Path('.sensor'))
         #response = rj.jsonget('obj')
-        cur = conn.cursor()
-        cur.execute("select * from %s where name = 'BMP'"),TABLE_NAME
-        foo = json.dumps(cur.fetchall())
-        cur.close()
-        print(foo)
-        return foo
+        #cur = conn.cursor()
+        #
+        # cur.execute("select * from %s where name = 'BMP'"),TABLE_NAME
+        #foo = json.dumps(cur.fetchall())
+        #cur.close()
+        #print(foo)
+        return response
+@app.route("/redis/bmp", methods=["POST", "GET"])
+def redis_bmp():
+    if request.method == "POST":
+        obj=request.get_json()
+        rj.jsonset('bmp', Path.rootPath(), obj)
+        print(obj)
+        return "bmp to redis"
+    else:
+        response = rj.jsonget('bmp',Path.rootPath())
+        return response
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5002)
+    app.run(host="0.0.0.0", port=5001)
