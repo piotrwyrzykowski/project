@@ -40,9 +40,4 @@ networks:
   docker_network:
     driver: bridge
 volumes:
-  redis:
-    driver: local
-    driver_opts:
-      type: ''
-      o: 'bind'
-      device: '/home/panda/project/data/redis'
+  redis: {}
