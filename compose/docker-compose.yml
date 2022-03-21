@@ -2,9 +2,10 @@ version: '3'
 services:
 
   backend:
+    restart: always
     depends_on:
     - redis
-    - db
+    #- db
     container_name: backend
     build:
       context: ../back
@@ -25,28 +26,17 @@ services:
     networks:
     - docker_network
 
-
   frontend:
     depends_on:
       - backend
     container_name: frontend
     build:
-      context: ../front
-        
+      context: ../front     
     ports:
     - "5000:5000"
     networks:
     - docker_network
 
-  db:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: example
-    volumes:
-      - postgresql:/var/lib/postgresql
-    networks:
-    - docker_network
 
   adminer:
     image: adminer
@@ -66,9 +56,3 @@ volumes:
       type: ''
       o: 'bind'
       device: '/home/panda/project/data/redis'
-  postgresql:
-    driver: local
-    driver_opts:
-      type: ''
-      o: 'bind'
-      device: '/home/panda/project/data/postgresql'
