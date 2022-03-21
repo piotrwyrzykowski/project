@@ -5,7 +5,6 @@ services:
     restart: always
     depends_on:
     - redis
-    #- db
     container_name: backend
     build:
       context: ../back
@@ -34,15 +33,6 @@ services:
       context: ../front     
     ports:
     - "5000:5000"
-    networks:
-    - docker_network
-
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
     networks:
     - docker_network
 
