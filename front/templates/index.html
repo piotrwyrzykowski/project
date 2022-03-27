@@ -16,13 +16,32 @@
 <head>
     <title>Stacja pogodowa</title>
     <meta charset="utf-8">
+    <script>
+        const d = new Date({{ data_bmp.timestamp }} * 1000);
+
+        Number.prototype.padLeft = function(base,chr){
+            var  len = (String(base || 10).length - String(this).length)+1;
+            return len > 0? new Array(len).join(chr || '0')+this : this;
+        }
+
+        dateformat = [(d.getHours()).padLeft(),
+            (d.getMinutes()).padLeft(),
+            (d.getSeconds()).padLeft()].join(':')+' '+
+            [(d.getDate()).padLeft(),
+            (d.getMonth()+1).padLeft(),
+            (d.getFullYear()).padLeft()].join('/');       
+        
+    </script>
 </head>
 <body>
+    
     <h1>Stacja pogodowa!</h1>
     <p>
         Nazwa sensora: {{ data_bmp.name }}</br>
         Temperatura: {{ data_bmp.temp }}</br>
         Wilgotnsc: {{ data_bmp.hum }}</br>
         Cisnenie: {{ data_bmp.press }}</br>
+        Czas: <script> document.write(dateformat)</script></br>
+
 </body>
-</html
+</html>

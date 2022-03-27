@@ -1,9 +1,12 @@
 from flask import Flask, request, jsonify
 from rejson import Client, Path
-import psycopg2
 import json
+from json import dumps
 import jsonschema
 from jsonschema import validate
+import datetime
+from datetime import date, timezone
+import time
 
 app = Flask(__name__)
 
@@ -40,6 +43,17 @@ def validateJson(jsonData):
         return False
     return True
 
+def json_serial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+
+def addTimeStamp(jsonData):
+      epoch = datetime.datetime.now().timestamp()
+      #epoch = epoch.replace(tzinfo=timezone.utc)
+      jsonData["timestamp"] = round(epoch)
+      return jsonData
 
 @app.route("/", methods=["POST", "GET"])
 def index():
@@ -54,7 +68,7 @@ def redis_bmp():
         obj=request.get_json()
         isValid = validateJson(obj)
         if isValid:
-            rj.jsonset('bmp', Path.rootPath(), obj)
+            rj.jsonset('bmp', Path.rootPath(), addTimeStamp(obj))
             return "valid json data"
         else:
             return "json is invalid"       

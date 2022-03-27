@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 import requests
 import sys
 
+
+
 app = Flask(__name__)
 
 backend_URL = "http://backend:5001"
