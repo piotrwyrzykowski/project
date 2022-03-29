@@ -9,5 +9,5 @@ Projekt stacji pogodowej
 
  **backend**
 
- **posrt=** 5000 http://[ip]:5001/
+ **port=** 5001 http://[ip]:5001/
 
