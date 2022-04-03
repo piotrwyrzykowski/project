@@ -24,13 +24,26 @@ bmpSchema = {
     "pm2.5": { "type": "number" },
     "pm10": { "type": "number" }
   },
-  "if": {
-    "properties": {
-      "name": { "const": "BMP" }
+  "allOf":[
+    { 
+      "if": {
+        "properties": { "name": { "const": "BMP" }},
+        "required": ["name"]
+      },
+      "then": {
+        "required": ["temp","hum","press"]
+        }
     },
-    "required": ["name"]
-  },
-  "then": { "required": ["temp","hum","press"] }
+    {
+      "if":{
+        "properties": { "name": { "const": "PMS" }},
+        "required": ["name"]
+      },
+      "then": {
+        "required": ["pm1.0","pm2.5","pm10"]
+        }
+    }
+  ]
 }
 def validateJson(jsonData):
     try:
