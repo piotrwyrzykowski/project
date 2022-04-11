@@ -48,16 +48,8 @@
     
     <h1>Stacja pogodowa!</h1>
     <p>
-        Nazwa sensora: {{ data_bmp.name }}</br>
-        Temperatura: {{ data_bmp.temp }}</br>
-        Wilgotnsc: {{ data_bmp.hum }}</br>
-        Cisnenie: {{ data_bmp.press }}</br>
-        Czas: <script> document.write(dateformat)</script></br>
-        pm1.0: {{ data_pms.pm1_0 }}</br>
-        pm2.5: {{ data_pms.pm2_5 }}</br>
-        pm10: {{ data_pms.pm10 }}</br>
-        <a href="{{ ip }}" class="button">Go to Graph</a>
-        <br>
+        BMP</br>
+        <iframe src="{{ url }}" width="450" height="200" frameborder="0"></iframe>
         <br>
         <br>
         <br>

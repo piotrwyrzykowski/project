@@ -1,4 +1,4 @@
 flask
 rejson
-psycopg2-binary
+influxdb_client
 jsonschema
