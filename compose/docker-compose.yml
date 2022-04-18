@@ -28,7 +28,7 @@ services:
     - docker_network
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:8.4.6
     container_name: grafana
     restart: always
     depends_on: 
@@ -43,7 +43,7 @@ services:
       - GF_SECURITY_ALLOW_EMBEDDING=true
 
   influxdb:
-    image: influxdb:latest
+    image: influxdb:2.2.0-alpine
     container_name: influxdb
     restart: always
     ports:
@@ -63,7 +63,7 @@ services:
   redis:
     container_name: redis
     restart: always
-    image: "redislabs/rejson:latest"
+    image: "redislabs/rejson:2.0.8"
     volumes:
         - redis:/data
     ports:

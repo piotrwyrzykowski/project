@@ -9,10 +9,10 @@ app = Flask(__name__)
 backend_URL = "http://backend:5001"
 ip = "pms"
 def get_redis_bmp():
-    return requests.get(url=backend_URL+"/redis/bmp").json()
+    return requests.get(url=backend_URL+"/api/bmp").json()
 
 def get_redis_pms():
-    return requests.get(url=backend_URL+"/redis/pms").json()
+    return requests.get(url=backend_URL+"/api/pms").json()
 
 
 @app.route("/", methods=["POST","GET"])
