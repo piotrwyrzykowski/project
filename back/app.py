@@ -2,55 +2,19 @@ from flask import Flask, request, jsonify
 from rejson import Client, Path
 import json
 from json import dumps
-import jsonschema
-from jsonschema import validate
 import datetime
 from datetime import date, timezone
 import time
+
+from influxdb_client import InfluxDBClient
+from influxdb_client.client.write_api import SYNCHRONOUS
+
+
 
 app = Flask(__name__)
 
 rj = Client(host='redis', port=6379, decode_responses=True)
 
-
-bmpSchema = {
-  "type": "object",
-  "properties": {
-    "name": { "type": "string" },
-    "temp": { "type": "number" },
-    "hum": { "type": "number" },
-    "press": { "type": "number" },
-    "pm1.0": { "type": "number" },
-    "pm2.5": { "type": "number" },
-    "pm10": { "type": "number" }
-  },
-  "allOf":[
-    { 
-      "if": {
-        "properties": { "name": { "const": "BMP" }},
-        "required": ["name"]
-      },
-      "then": {
-        "required": ["temp","hum","press"]
-        }
-    },
-    {
-      "if":{
-        "properties": { "name": { "const": "PMS" }},
-        "required": ["name"]
-      },
-      "then": {
-        "required": ["pm1.0","pm2.5","pm10"]
-        }
-    }
-  ]
-}
-def validateJson(jsonData):
-    try:
-        validate(instance=jsonData, schema=(bmpSchema))
-    except jsonschema.exceptions.ValidationError as err:
-        return False
-    return True
 
 
 def addTimeStamp(jsonData):
@@ -59,8 +23,14 @@ def addTimeStamp(jsonData):
       return jsonData
 
 def sendToRedis(jsonData):
-  data = jsonData['name']
+  data = jsonData['measurement']
   rj.jsonset( data, Path.rootPath(), addTimeStamp(jsonData))
+
+def sendToInfluxdb(jsonData):
+  with InfluxDBClient(url="http://influxdb:8086", token="mytoken", org="pwr", debug=True) as client:
+    with client.write_api(write_options=SYNCHRONOUS) as write_api:
+        write_api.write(bucket="grafana", record=jsonData)
+
 
 @app.route("/", methods=["POST", "GET"])
 def index():
@@ -69,19 +39,26 @@ def index():
     else:
         return "Wrong api call"
 
-@app.route("/redis/bmp", methods=["POST", "GET"])
+@app.route("/api/bmp", methods=["POST", "GET"])
 def redis_bmp():
     if request.method == "POST":
         obj=request.get_json()
-        isValid = validateJson(obj)
-        if isValid:
-            sendToRedis(obj)
-            #rj.jsonset('bmp', Path.rootPath(), addTimeStamp(obj))
-            return "valid json data"
-        else:
-            return "json is invalid"       
+        sendToRedis(obj)
+        sendToInfluxdb(obj)
+        return obj
     else:
         response = rj.jsonget('BMP',Path.rootPath())
+        return response
+
+@app.route("/api/pms", methods=["POST", "GET"])
+def redis_pms():
+    if request.method == "POST":
+        obj=request.get_json()
+        sendToRedis(obj)
+        sendToInfluxdb(obj)
+        return obj     
+    else:
+        response = rj.jsonget('PMS',Path.rootPath())
         return response
 
 if __name__ == "__main__":
