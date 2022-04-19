@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 services:
 
   backend:
@@ -12,8 +12,6 @@ services:
     - "5001:5001"
     networks:
     - docker_network
-    environment:
-    - PYTHONUNBUFFERED=0
 
   frontend:
     depends_on:
@@ -28,17 +26,20 @@ services:
     - docker_network
 
   grafana:
-    image: grafana/grafana:8.4.6
+    image: grafana/grafana:8.4.4
     container_name: grafana
     restart: always
     depends_on: 
       - influxdb
+    user: 0:0
     ports:
       - 3000:3000
     networks:
       - docker_network
     volumes:
-      - grafana:/var/lib/grafana
+      - type: bind
+        source: ../volumes/grafana
+        target: /var/lib/grafana        
     environment:
       - GF_SECURITY_ALLOW_EMBEDDING=true
 
@@ -51,21 +52,30 @@ services:
     networks:
       - docker_network
     volumes:
-      - influxdb:/var/lib/influxdb
+      - type: bind
+        source: ../volumes/influxdb/data
+        target: /var/lib/influxdb2
+      - type: bind
+        source: ../volumes/influxdb/config
+        target: /etc/influxdb2     
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=password
-      - DOCKER_INFLUXDB_INIT_ORG=pwr
-      - DOCKER_INFLUXDB_INIT_BUCKET=grafana
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken 
+      - DOCKER_INFLUXDB_INIT_USERNAME=${influx_username}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${influx_password}
+      - DOCKER_INFLUXDB_INIT_ORG=${influx_org}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${influx_bucket}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${influx_token}
+      - DOCKER_INFLUXDB_INIT_CLI_CONFIG_NAME=default
+      - DOCKER_INFLUXDB_CONFIG_PATH=/root/influxdb2/config.toml
 
   redis:
     container_name: redis
     restart: always
     image: "redislabs/rejson:2.0.8"
     volumes:
-        - redis:/data
+      - type: bind
+        source: ../volumes/redis
+        target: /data
     ports:
       - "6379:6379"
     networks:
@@ -74,7 +84,3 @@ services:
 networks:
   docker_network:
     driver: bridge
-volumes:
-  redis: {}
-  grafana: {}
-  influxdb: {}
