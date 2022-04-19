@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 services:
 
   backend:
@@ -28,7 +28,7 @@ services:
     - docker_network
 
   grafana:
-    image: grafana/grafana:8.4.6
+    image: grafana/grafana:8.4.4
     container_name: grafana
     restart: always
     depends_on: 
@@ -38,7 +38,9 @@ services:
     networks:
       - docker_network
     volumes:
-      - grafana:/var/lib/grafana
+      - type: bind
+        source: ../data/grafana
+        target: /var/lib/grafana        
     environment:
       - GF_SECURITY_ALLOW_EMBEDDING=true
 
@@ -51,7 +53,11 @@ services:
     networks:
       - docker_network
     volumes:
-      - influxdb:/var/lib/influxdb
+    #  - influxdb:/var/lib/influxdb
+      - type: bind
+        source: ../data/influxdb
+        target: /var/lib/influxdb2     
+
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
@@ -65,7 +71,9 @@ services:
     restart: always
     image: "redislabs/rejson:2.0.8"
     volumes:
-        - redis:/data
+      - type: bind
+        source: ../data/redis
+        target: /data
     ports:
       - "6379:6379"
     networks:
@@ -74,7 +82,5 @@ services:
 networks:
   docker_network:
     driver: bridge
-volumes:
-  redis: {}
-  grafana: {}
-  influxdb: {}
+#volumes:
+#  influxdb: {}
