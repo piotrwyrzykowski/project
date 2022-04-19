@@ -31,13 +31,14 @@ services:
     restart: always
     depends_on: 
       - influxdb
+    user: 0:0
     ports:
       - 3000:3000
     networks:
       - docker_network
     volumes:
       - type: bind
-        source: ../data/grafana
+        source: ../volumes/grafana
         target: /var/lib/grafana        
     environment:
       - GF_SECURITY_ALLOW_EMBEDDING=true
@@ -52,15 +53,20 @@ services:
       - docker_network
     volumes:
       - type: bind
-        source: ../data/influxdb
-        target: /var/lib/influxdb2     
+        source: ../volumes/influxdb/data
+        target: /var/lib/influxdb2
+      - type: bind
+        source: ../volumes/influxdb/config
+        target: /etc/influxdb2     
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=${influx_username}
       - DOCKER_INFLUXDB_INIT_PASSWORD=${influx_password}
       - DOCKER_INFLUXDB_INIT_ORG=${influx_org}
       - DOCKER_INFLUXDB_INIT_BUCKET=${influx_bucket}
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN= ${influx_token}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${influx_token}
+      - DOCKER_INFLUXDB_INIT_CLI_CONFIG_NAME=default
+      - DOCKER_INFLUXDB_CONFIG_PATH=/root/influxdb2/config.toml
 
   redis:
     container_name: redis
@@ -68,7 +74,7 @@ services:
     image: "redislabs/rejson:2.0.8"
     volumes:
       - type: bind
-        source: ../data/redis
+        source: ../volumes/redis
         target: /data
     ports:
       - "6379:6379"

@@ -11,7 +11,7 @@ import pytz
 app = Flask(__name__)
 
 backend_URL = "http://backend:5001"
-ip = "pms"
+ip = "graph"
 def get_redis_bmp():
     return requests.get(url=backend_URL+"/api/bmp").json()
 
@@ -23,7 +23,7 @@ def get_redis_pms():
 def index():
     return render_template("index.html", data_bmp=get_redis_bmp(), data_pms=get_redis_pms(), ip=ip)
 
-@app.route("/pms", methods=["POST","GET"])
+@app.route("/graph", methods=["POST","GET"])
 def pms():
     tz = pytz.timezone("Europe/Warsaw")
     epoch = round(datetime.datetime.now(tz).timestamp()) * 1000
