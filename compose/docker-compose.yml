@@ -38,10 +38,14 @@ services:
       - docker_network
     volumes:
       - type: bind
-        source: ../volumes/grafana
-        target: /var/lib/grafana        
+        source: ../volumes/grafana/data
+        target: /var/lib/grafana
+      - type: bind
+        source: ./provisioning
+        target: /etc/grafana/provisioning
     environment:
       - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
 
   influxdb:
     image: influxdb:2.2.0-alpine
