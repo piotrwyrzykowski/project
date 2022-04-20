@@ -1,5 +1,7 @@
 #!/bin/bash
 mkdir ./volumes/grafana
+mkdir ./volumes/grafana/data
+#mkdir ./volumes/grafana/configs
 mkdir ./volumes/redis
 mkdir ./volumes/influxdb
 mkdir ./volumes/influxdb/data
