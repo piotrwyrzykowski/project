@@ -1,6 +1,7 @@
+
+
 version: '3.2'
 services:
-
   backend:
     restart: always
     depends_on:
@@ -76,10 +77,15 @@ services:
     container_name: redis
     restart: always
     image: "redislabs/rejson:2.0.8"
+    user: 0:0
+    command: sh -c "redis-server --appendfsync always --appendonly yes --save "" --loadmodule /usr/lib/redis/modules/rejson.so --loadmodule /usr/lib/redis/modules/redisearch.so"
+    #command: redis-server --save "" --appendonly no
     volumes:
-      - type: bind
-        source: ../volumes/redis
-        target: /data
+      #- type: bind
+      #  source: ../volumes/redis
+      #  target: /data
+      - redisdata:/data
+      - redisetc:/etc     
     ports:
       - "6379:6379"
     networks:
@@ -88,3 +94,6 @@ services:
 networks:
   docker_network:
     driver: bridge
+volumes:
+  redisdata: {}
+  redisetc: {}
