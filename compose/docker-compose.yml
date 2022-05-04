@@ -1,11 +1,9 @@
-
-
 version: '3.2'
 services:
   backend:
     restart: always
     depends_on:
-    - redis
+      - influxdb
     container_name: backend
     build:
       context: ../back
@@ -73,27 +71,6 @@ services:
       - DOCKER_INFLUXDB_INIT_CLI_CONFIG_NAME=default
       - DOCKER_INFLUXDB_CONFIG_PATH=/root/influxdb2/config.toml
 
-  redis:
-    container_name: redis
-    restart: always
-    image: "redislabs/rejson:2.0.8"
-    user: 0:0
-    command: sh -c "redis-server --appendfsync always --appendonly yes --save "" --loadmodule /usr/lib/redis/modules/rejson.so --loadmodule /usr/lib/redis/modules/redisearch.so"
-    #command: redis-server --save "" --appendonly no
-    volumes:
-      #- type: bind
-      #  source: ../volumes/redis
-      #  target: /data
-      - redisdata:/data
-      - redisetc:/etc     
-    ports:
-      - "6379:6379"
-    networks:
-    - docker_network
-
 networks:
   docker_network:
     driver: bridge
-volumes:
-  redisdata: {}
-  redisetc: {}

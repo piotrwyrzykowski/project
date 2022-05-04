@@ -6,14 +6,12 @@ import datetime
 from datetime import date, timezone
 import time
 
-from influxdb_client import InfluxDBClient
+from influxdb_client import InfluxDBClient, Dialect
 from influxdb_client.client.write_api import SYNCHRONOUS
 
 
 
 app = Flask(__name__)
-
-rj = Client(host='redis', port=6379, decode_responses=True)
 
 
 
@@ -22,15 +20,30 @@ def addTimeStamp(jsonData):
       jsonData["timestamp"] = round(epoch)
       return jsonData
 
-def sendToRedis(jsonData):
-  data = jsonData['measurement']
-  rj.jsonset( data, Path.rootPath(), addTimeStamp(jsonData))
-
 def sendToInfluxdb(jsonData):
   with InfluxDBClient(url="http://influxdb:8086", token="mytoken", org="pwr", debug=True) as client:
     with client.write_api(write_options=SYNCHRONOUS) as write_api:
         write_api.write(bucket="grafana", record=jsonData)
 
+def getFromInfluxdb(sensor):
+    with InfluxDBClient(url="http://stacyjka.ddns.net:8086", token="mytoken", org="pwr", debug=True) as client:
+        query = f'''
+            from(bucket: "grafana") 
+            |> range(start: -100h ) 
+            |> last()
+            |> filter(fn: (r) => r._measurement == "{sensor}")
+            '''
+        query_api = client.query_api()
+        csv_result = query_api.query_csv(query,
+                                         dialect=Dialect(header=False, delimiter=",", comment_prefix="#",
+                                                         annotations=[],
+                                                         date_time_format="RFC3339"))
+        data = {}
+        for csv_line in csv_result:
+            if not len(csv_line) == 0:
+                # print(f'"{csv_line[7]}":, "{csv_line[6]}"')
+                data |= {csv_line[7]: csv_line[6]}
+        return data
 
 @app.route("/", methods=["POST", "GET"])
 def index():
@@ -43,22 +56,20 @@ def index():
 def redis_bmp():
     if request.method == "POST":
         obj=request.get_json()
-        sendToRedis(obj)
         sendToInfluxdb(obj)
         return obj
     else:
-        response = rj.jsonget('BMP',Path.rootPath())
+        response = getFromInfluxdb("BMP")
         return response
 
 @app.route("/api/pms", methods=["POST", "GET"])
 def redis_pms():
     if request.method == "POST":
         obj=request.get_json()
-        sendToRedis(obj)
         sendToInfluxdb(obj)
         return obj     
     else:
-        response = rj.jsonget('PMS',Path.rootPath())
+        response = getFromInfluxdb("PMS")
         return response
 
 if __name__ == "__main__":

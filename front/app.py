@@ -13,16 +13,11 @@ app = Flask(__name__)
 backend_URL = "http://backend:5001"
 ip = "graph"
 def get_redis_bmp():
-    try:
-      return requests.get(url=backend_URL+"/api/bmp").json()
-    except:
-      return {"fields":{"hum":"N/A","press":"N/A","temp":"N/A"},"measurement":"BMP","timestamp":"N/A"}
+    return requests.get(url=backend_URL+"/api/bmp").json()
+
 
 def get_redis_pms():
-    try:
-      return requests.get(url=backend_URL+"/api/pms").json()
-    except:
-      return {"fields":{"pm10_0":"N/A","pm1_0":"N/A","pm2_5":"N/A"},"measurement":"PMS","timestamp":"N/A"}
+    return requests.get(url=backend_URL+"/api/pms").json()
 
 @app.route("/", methods=["POST","GET"])
 def index():
