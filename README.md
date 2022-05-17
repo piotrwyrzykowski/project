@@ -11,3 +11,5 @@ Projekt stacji pogodowej
 
  **port=** 5001 http://[ip]:5001/
 
+ {"measurement": "PMS", "fields":{"pm1_0": 15, "pm2_5": 1230, "pm10_0": 696}}
+ {"measurement": "BMP", "fields":{"temp": 32, "hum": 69, "press": 841}}
