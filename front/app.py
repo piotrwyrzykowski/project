@@ -19,9 +19,12 @@ def get_bmp():
 def get_pms():
     return requests.get(url=backend_URL+"/api/pms").json()
 
+def get_shield():
+    return requests.get(url=backend_URL+"/api/shield").json()
+
 @app.route("/", methods=["POST","GET"])
 def index():
-    return render_template("index.html", data_bmp=get_bmp(), data_pms=get_pms(), ip=ip)
+    return render_template("index.html", data_bmp=get_bmp(), data_pms=get_pms(), data_shield=get_shield(), ip=ip)
 
 @app.route("/graph", methods=["POST","GET"])
 def graph():

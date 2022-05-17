@@ -53,7 +53,7 @@ def index():
         return "Wrong api call"
 
 @app.route("/api/bmp", methods=["POST", "GET"])
-def redis_bmp():
+def api_bmp():
     if request.method == "POST":
         obj=request.get_json()
         sendToInfluxdb(obj)
@@ -63,13 +63,23 @@ def redis_bmp():
         return response
 
 @app.route("/api/pms", methods=["POST", "GET"])
-def redis_pms():
+def api_pms():
     if request.method == "POST":
         obj=request.get_json()
         sendToInfluxdb(obj)
         return obj     
     else:
         response = getFromInfluxdb("PMS")
+        return response
+
+@app.route("/api/shield", methods=["POST", "GET"])
+def api_shield():
+    if request.method == "POST":
+        obj=request.get_json()
+        sendToInfluxdb(obj)
+        return obj     
+    else:
+        response = getFromInfluxdb("SHIELD")
         return response
 
 if __name__ == "__main__":
