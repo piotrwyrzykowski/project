@@ -12,16 +12,16 @@ app = Flask(__name__)
 
 backend_URL = "http://backend:5001"
 ip = "graph"
+
 def get_bmp():
     return requests.get(url=backend_URL+"/api/bmp").json()
-
 
 def get_pms():
     return requests.get(url=backend_URL+"/api/pms").json()
 
 @app.route("/", methods=["POST","GET"])
 def index():
-    return render_template("index.html", data_bmp=get_redis_bmp(), data_pms=get_redis_pms(), ip=ip)
+    return render_template("index.html", data_bmp=get_bmp(), data_pms=get_pms(), ip=ip)
 
 @app.route("/graph", methods=["POST","GET"])
 def graph():
