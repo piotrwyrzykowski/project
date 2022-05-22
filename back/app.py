@@ -1,24 +1,12 @@
-from flask import Flask, request, jsonify
-from rejson import Client, Path
-import json
-from json import dumps
-import datetime
-from datetime import date, timezone
-import time
-
-from influxdb_client import InfluxDBClient, Dialect
+from flask import Flask, request
+from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS
+import pandas as pd
 
 
 
 app = Flask(__name__)
 
-
-
-def addTimeStamp(jsonData):
-      epoch = datetime.datetime.now().timestamp()
-      jsonData["timestamp"] = round(epoch)
-      return jsonData
 
 def sendToInfluxdb(jsonData):
   with InfluxDBClient(url="http://influxdb:8086", token="mytoken", org="pwr", debug=True) as client:
@@ -26,24 +14,18 @@ def sendToInfluxdb(jsonData):
         write_api.write(bucket="grafana", record=jsonData)
 
 def getFromInfluxdb(sensor):
-    with InfluxDBClient(url="http://stacyjka.ddns.net:8086", token="mytoken", org="pwr", debug=True) as client:
+    with InfluxDBClient(url="http://influxdb:8086", token="mytoken", org="pwr", debug=True) as client:
         query = f'''
             from(bucket: "grafana") 
             |> range(start: -100h ) 
             |> last()
             |> filter(fn: (r) => r._measurement == "{sensor}")
+            |> keep(columns: ["_time", "_field", "_value"])
+            |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") 
+            |> yield()
             '''
-        query_api = client.query_api()
-        csv_result = query_api.query_csv(query,
-                                         dialect=Dialect(header=False, delimiter=",", comment_prefix="#",
-                                                         annotations=[],
-                                                         date_time_format="RFC3339"))
-        data = {}
-        for csv_line in csv_result:
-            if not len(csv_line) == 0:
-                # print(f'"{csv_line[7]}":, "{csv_line[6]}"')
-                data |= {csv_line[7]: csv_line[6]}
-        return data
+        df = client.query_api().query_data_frame(query, org="pwr")
+        return df.to_json(orient='records')
 
 @app.route("/", methods=["POST", "GET"])
 def index():

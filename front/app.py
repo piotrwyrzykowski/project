@@ -1,12 +1,5 @@
 from flask import Flask, render_template, request
 import requests
-import sys
-
-import datetime
-from datetime import date, timezone
-import pytz
-
-
 
 app = Flask(__name__)
 

@@ -1,4 +1,3 @@
 flask
-rejson
 influxdb_client
-jsonschema
+pandas
