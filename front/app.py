@@ -7,7 +7,12 @@ backend_URL = "http://backend:5001"
 ip = "graph"
 
 def get_bmp():
-    return requests.get(url=backend_URL+"/api/bmp").json()
+    data=requests.get(url=backend_URL+"/api/bmp")
+    try:
+        return requests.get(url=backend_URL+"/api/bmp").json()
+    except:
+        return {"result":"_result","table":"N/A","_time":"N/A","hum":"N/A","press":"N/A","temp":"N/A"}
+    
 
 def get_pms():
     return requests.get(url=backend_URL+"/api/pms").json()

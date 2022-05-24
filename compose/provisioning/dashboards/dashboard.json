@@ -1,347 +1,491 @@
 {
-  "annotations": {
-    "list": [
-      {
-        "builtIn": 1,
-        "datasource": "-- Grafana --",
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "target": {
-          "limit": 100,
-          "matchAny": false,
-          "tags": [],
-          "type": "dashboard"
-        },
-        "type": "dashboard"
-      }
-    ]
+  "annotations":{
+     "list":[
+        {
+           "builtIn":1,
+           "datasource":"-- Grafana --",
+           "enable":true,
+           "hide":true,
+           "iconColor":"rgba(0, 211, 255, 1)",
+           "name":"Annotations & Alerts",
+           "target":{
+              "limit":100,
+              "matchAny":false,
+              "tags":[
+                 
+              ],
+              "type":"dashboard"
+           },
+           "type":"dashboard"
+        }
+     ]
   },
-  "editable": true,
-  "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
-  "links": [],
-  "liveNow": false,
-  "panels": [
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P951FEA4DE68E13C5"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 0
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P951FEA4DE68E13C5"
-          },
-          "query": "from(bucket: \"grafana\")\r\n    |> range(start: -6h, stop: -0s)\r\n    |> filter(fn: (r) => r._measurement == \"BMP\" and r._field ==\"temp\" or r._field ==\"press\" or r._field ==\"hum\")\r\n    |> window(every: 10s)\r\n    |> duplicate(column: \"_stop\", as: \"_time\")\r\n    |> window(every: inf)",
-          "refId": "A"
-        }
-      ],
-      "title": "BMP",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P951FEA4DE68E13C5"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 70
-              },
-              {
-                "color": "red",
-                "value": 85
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 0
-      },
-      "id": 3,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.4.4",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P951FEA4DE68E13C5"
-          },
-          "query": "from(bucket: \"grafana\")\r\n    |> range(start: -6h, stop: -0s)\r\n    |> filter(fn: (r) => r._measurement == \"PMS\" and r._field ==\"pm1_0\" or r._field ==\"pm2_5\" or r._field ==\"pm10_0\")\r\n    |> window(every: 10s)\r\n    |> duplicate(column: \"_stop\", as: \"_time\")\r\n    |> window(every: inf)",
-          "refId": "A"
-        }
-      ],
-      "title": "PMS",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P951FEA4DE68E13C5"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 70
-              },
-              {
-                "color": "red",
-                "value": 85
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "wind"
-            },
-            "properties": [
-              {
-                "id": "custom.axisPlacement",
-                "value": "right"
-              },
-              {
-                "id": "custom.lineWidth",
-                "value": 3
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "rain"
-            },
-            "properties": [
-              {
-                "id": "custom.drawStyle",
-                "value": "bars"
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 100
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 9
-      },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "8.4.4",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P951FEA4DE68E13C5"
-          },
-          "query": "from(bucket: \"grafana\")\r\n    |> range(start: -6h, stop: -0s)\r\n    |> filter(fn: (r) => r._measurement == \"SHIELD\" and r._field ==\"wind\" or r._field ==\"rain\")\r\n    |> window(every: 10s)\r\n    |> duplicate(column: \"_stop\", as: \"_time\")\r\n    |> window(every: inf)",
-          "refId": "A"
-        }
-      ],
-      "title": "Shield",
-      "type": "timeseries"
-    }
+  "editable":true,
+  "fiscalYearStartMonth":0,
+  "graphTooltip":0,
+  "links":[
+     
   ],
-  "refresh": "",
-  "schemaVersion": 35,
-  "style": "dark",
-  "tags": [],
-  "templating": {
-    "list": []
+  "liveNow":false,
+  "panels":[
+     {
+        "datasource":{
+           "type":"influxdb",
+           "uid":"P951FEA4DE68E13C5"
+        },
+        "gridPos":{
+           "h":8,
+           "w":12,
+           "x":0,
+           "y":0
+        },
+        "id":6,
+        "pconfig":{
+           "layout":{
+              "autosize":false,
+              "font":{
+                 "color":"rgb(110,110,110)",
+                 "family":"\"Open Sans\", Helvetica, Arial, sans-serif"
+              },
+              "hovermode":"closest",
+              "legend":{
+                 "orientation":"v"
+              },
+              "paper_bgcolor":"transparent",
+              "plot_bgcolor":"transparent",
+              "polar":{
+                 "angularaxis":{
+                    "direction":"counterclockwise",
+                    "dtick":22.5,
+                    "rotation":0
+                 },
+                 "radialaxis":{
+                    "angle":90,
+                    "ticksuffix":"%"
+                 }
+              },
+              "showlegend":true
+           },
+           "mapping":{
+              "color":"@index",
+              "x":"dir",
+              "y":"wind"
+           },
+           "settings":{
+              "color_option":"ramp",
+              "displayModeBar":true,
+              "marker":{
+                 "color":"#33B5E5",
+                 "colorscale":"YIOrRd",
+                 "showscale":true,
+                 "size":15,
+                 "sizemin":3,
+                 "sizemode":"diameter",
+                 "sizeref":0.2,
+                 "symbol":"circle"
+              },
+              "petals":16,
+              "plot":"windrose",
+              "wind_speed_interval":1
+           }
+        },
+        "targets":[
+           {
+              "datasource":{
+                 "type":"influxdb",
+                 "uid":"P951FEA4DE68E13C5"
+              },
+              "query":"from(bucket: \"grafana\")\r\n    |> range(start: -6h, stop: -0s)\r\n    |> filter(fn: (r) => r._measurement == \"SHIELD\" and r._field==\"dir\" or r._field==\"wind\")\r\n    |> window(every: 10s)\r\n    |> duplicate(column: \"_stop\", as: \"_time\")\r\n    |> window(every: inf)",
+              "refId":"A"
+           }
+        ],
+        "title":"Panel Title",
+        "type":"fatcloud-windrose-panel"
+     },
+     {
+        "datasource":{
+           "type":"influxdb",
+           "uid":"P951FEA4DE68E13C5"
+        },
+        "fieldConfig":{
+           "defaults":{
+              "color":{
+                 "mode":"palette-classic"
+              },
+              "custom":{
+                 "axisLabel":"",
+                 "axisPlacement":"auto",
+                 "barAlignment":0,
+                 "drawStyle":"line",
+                 "fillOpacity":0,
+                 "gradientMode":"none",
+                 "hideFrom":{
+                    "legend":false,
+                    "tooltip":false,
+                    "viz":false
+                 },
+                 "lineInterpolation":"linear",
+                 "lineWidth":1,
+                 "pointSize":5,
+                 "scaleDistribution":{
+                    "type":"linear"
+                 },
+                 "showPoints":"auto",
+                 "spanNulls":false,
+                 "stacking":{
+                    "group":"A",
+                    "mode":"none"
+                 },
+                 "thresholdsStyle":{
+                    "mode":"off"
+                 }
+              },
+              "mappings":[
+                 
+              ],
+              "thresholds":{
+                 "mode":"percentage",
+                 "steps":[
+                    {
+                       "color":"green"
+                    },
+                    {
+                       "color":"orange",
+                       "value":70
+                    },
+                    {
+                       "color":"red",
+                       "value":85
+                    }
+                 ]
+              }
+           },
+           "overrides":[
+              
+           ]
+        },
+        "gridPos":{
+           "h":9,
+           "w":12,
+           "x":12,
+           "y":0
+        },
+        "id":3,
+        "options":{
+           "legend":{
+              "calcs":[
+                 
+              ],
+              "displayMode":"list",
+              "placement":"bottom"
+           },
+           "tooltip":{
+              "mode":"single",
+              "sort":"none"
+           }
+        },
+        "pluginVersion":"8.4.4",
+        "targets":[
+           {
+              "datasource":{
+                 "type":"influxdb",
+                 "uid":"P951FEA4DE68E13C5"
+              },
+              "query":"from(bucket: \"grafana\")\r\n    |> range(start: -6h, stop: -0s)\r\n    |> filter(fn: (r) => r._measurement == \"PMS\" and r._field ==\"pm1_0\" or r._field ==\"pm2_5\" or r._field ==\"pm10_0\")\r\n    |> window(every: 10s)\r\n    |> duplicate(column: \"_stop\", as: \"_time\")\r\n    |> window(every: inf)",
+              "refId":"A"
+           }
+        ],
+        "title":"PMS",
+        "type":"timeseries"
+     },
+     {
+        "datasource":{
+           "type":"influxdb",
+           "uid":"P951FEA4DE68E13C5"
+        },
+        "description":"",
+        "fieldConfig":{
+           "defaults":{
+              "color":{
+                 "mode":"palette-classic"
+              },
+              "custom":{
+                 "axisLabel":"",
+                 "axisPlacement":"auto",
+                 "barAlignment":0,
+                 "drawStyle":"line",
+                 "fillOpacity":0,
+                 "gradientMode":"none",
+                 "hideFrom":{
+                    "legend":false,
+                    "tooltip":false,
+                    "viz":false
+                 },
+                 "lineInterpolation":"linear",
+                 "lineWidth":1,
+                 "pointSize":5,
+                 "scaleDistribution":{
+                    "type":"linear"
+                 },
+                 "showPoints":"auto",
+                 "spanNulls":false,
+                 "stacking":{
+                    "group":"A",
+                    "mode":"none"
+                 },
+                 "thresholdsStyle":{
+                    "mode":"off"
+                 }
+              },
+              "mappings":[
+                 
+              ],
+              "thresholds":{
+                 "mode":"absolute",
+                 "steps":[
+                    {
+                       "color":"green"
+                    },
+                    {
+                       "color":"red",
+                       "value":80
+                    }
+                 ]
+              }
+           },
+           "overrides":[
+              {
+                 "__systemRef":"hideSeriesFrom",
+                 "matcher":{
+                    "id":"byNames",
+                    "options":{
+                       "mode":"exclude",
+                       "names":[
+                          "hum"
+                       ],
+                       "prefix":"All except:",
+                       "readOnly":true
+                    }
+                 },
+                 "properties":[
+                    {
+                       "id":"custom.hideFrom",
+                       "value":{
+                          "legend":false,
+                          "tooltip":false,
+                          "viz":true
+                       }
+                    }
+                 ]
+              }
+           ]
+        },
+        "gridPos":{
+           "h":9,
+           "w":12,
+           "x":0,
+           "y":8
+        },
+        "id":2,
+        "options":{
+           "legend":{
+              "calcs":[
+                 
+              ],
+              "displayMode":"list",
+              "placement":"bottom"
+           },
+           "tooltip":{
+              "mode":"single",
+              "sort":"none"
+           }
+        },
+        "targets":[
+           {
+              "datasource":{
+                 "type":"influxdb",
+                 "uid":"P951FEA4DE68E13C5"
+              },
+              "query":"from(bucket: \"grafana\")\r\n    |> range(start: -6h, stop: -0s)\r\n    |> filter(fn: (r) => r._measurement == \"BMP\" and r._field ==\"temp\" or r._field ==\"press\" or r._field ==\"hum\")\r\n    |> window(every: 10s)\r\n    |> duplicate(column: \"_stop\", as: \"_time\")\r\n    |> window(every: inf)",
+              "refId":"A"
+           }
+        ],
+        "title":"BMP",
+        "type":"timeseries"
+     },
+     {
+        "datasource":{
+           "type":"influxdb",
+           "uid":"P951FEA4DE68E13C5"
+        },
+        "fieldConfig":{
+           "defaults":{
+              "color":{
+                 "mode":"palette-classic"
+              },
+              "custom":{
+                 "axisLabel":"",
+                 "axisPlacement":"auto",
+                 "barAlignment":0,
+                 "drawStyle":"line",
+                 "fillOpacity":0,
+                 "gradientMode":"none",
+                 "hideFrom":{
+                    "legend":false,
+                    "tooltip":false,
+                    "viz":false
+                 },
+                 "lineInterpolation":"linear",
+                 "lineWidth":1,
+                 "pointSize":5,
+                 "scaleDistribution":{
+                    "type":"linear"
+                 },
+                 "showPoints":"auto",
+                 "spanNulls":false,
+                 "stacking":{
+                    "group":"A",
+                    "mode":"none"
+                 },
+                 "thresholdsStyle":{
+                    "mode":"off"
+                 }
+              },
+              "mappings":[
+                 
+              ],
+              "thresholds":{
+                 "mode":"percentage",
+                 "steps":[
+                    {
+                       "color":"green"
+                    },
+                    {
+                       "color":"orange",
+                       "value":70
+                    },
+                    {
+                       "color":"red",
+                       "value":85
+                    }
+                 ]
+              }
+           },
+           "overrides":[
+              {
+                 "matcher":{
+                    "id":"byName",
+                    "options":"wind"
+                 },
+                 "properties":[
+                    {
+                       "id":"custom.axisPlacement",
+                       "value":"right"
+                    },
+                    {
+                       "id":"custom.lineWidth",
+                       "value":3
+                    }
+                 ]
+              },
+              {
+                 "matcher":{
+                    "id":"byName",
+                    "options":"rain"
+                 },
+                 "properties":[
+                    {
+                       "id":"custom.drawStyle",
+                       "value":"bars"
+                    },
+                    {
+                       "id":"custom.fillOpacity",
+                       "value":100
+                    }
+                 ]
+              },
+              {
+                 "__systemRef":"hideSeriesFrom",
+                 "matcher":{
+                    "id":"byNames",
+                    "options":{
+                       "mode":"exclude",
+                       "names":[
+                          "wind"
+                       ],
+                       "prefix":"All except:",
+                       "readOnly":true
+                    }
+                 },
+                 "properties":[
+                    {
+                       "id":"custom.hideFrom",
+                       "value":{
+                          "legend":false,
+                          "tooltip":false,
+                          "viz":true
+                       }
+                    }
+                 ]
+              }
+           ]
+        },
+        "gridPos":{
+           "h":9,
+           "w":12,
+           "x":12,
+           "y":9
+        },
+        "id":4,
+        "options":{
+           "legend":{
+              "calcs":[
+                 
+              ],
+              "displayMode":"list",
+              "placement":"bottom"
+           },
+           "tooltip":{
+              "mode":"single",
+              "sort":"none"
+           }
+        },
+        "pluginVersion":"8.4.4",
+        "targets":[
+           {
+              "datasource":{
+                 "type":"influxdb",
+                 "uid":"P951FEA4DE68E13C5"
+              },
+              "query":"from(bucket: \"grafana\")\r\n    |> range(start: -6h, stop: -0s)\r\n    |> filter(fn: (r) => r._measurement == \"SHIELD\" and r._field ==\"wind\" or r._field ==\"rain\" or r._field==\"dir\")\r\n    |> window(every: 10s)\r\n    |> duplicate(column: \"_stop\", as: \"_time\")\r\n    |> window(every: inf)",
+              "refId":"A"
+           }
+        ],
+        "title":"Shield",
+        "type":"timeseries"
+     }
+  ],
+  "refresh":"",
+  "schemaVersion":35,
+  "style":"dark",
+  "tags":[
+     
+  ],
+  "templating":{
+     "list":[
+        
+     ]
   },
-  "time": {
-    "from": "now-6h",
-    "to": "now"
+  "time":{
+     "from":"2022-05-17T13:37:19.847Z",
+     "to":"2022-05-31T18:57:19.847Z"
   },
-  "timepicker": {},
-  "timezone": "",
-  "title": "dashboard",
-  "uid": "W9xSy7Qnz",
-  "version": 3,
-  "weekStart": ""
+  "timepicker":{
+     
+  },
+  "timezone":"",
+  "title":"dashboard",
+  "uid":"W9xSy7Qnz",
+  "version":1,
+  "weekStart":""
 }

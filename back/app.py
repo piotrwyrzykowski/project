@@ -25,7 +25,8 @@ def getFromInfluxdb(sensor):
             |> yield()
             '''
         df = client.query_api().query_data_frame(query, org="pwr")
-        return df.to_json(orient='records')
+        return df.to_json(orient='records').strip("[]")
+    
 
 @app.route("/", methods=["POST", "GET"])
 def index():
