@@ -25,7 +25,16 @@ def getFromInfluxdb(sensor):
             |> yield()
             '''
         df = client.query_api().query_data_frame(query, org="pwr")
-        return df.to_json(orient='records').strip("[]")
+        result = df.to_json(orient='records').strip("[]")
+        if result:
+            return result
+        if sensor == "SHIELD":
+            return """{"wind": "N/A", "rain": "N/A", "dir":"N/A"}"""
+        if sensor == "BMP":
+            return """{"temp": "N/A", "hum": "N/A", "press": "N/A"}"""
+        if sensor == "PMS":
+            return """{"pm1_0": "N/A", "pm2_5": "N/A", "pm10_0": "N/A"}"""
+
     
 
 @app.route("/", methods=["POST", "GET"])
